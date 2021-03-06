@@ -1,15 +1,24 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, Button, View, SafeAreaView, ScrollView} from 'react-native'
+import { StyleSheet, Text, TextInput, View, SafeAreaView, Button, ScrollView} from 'react-native'
 import Todo from './Todo'
 
 
 const App = () => {
-  const [input, setInput] = useState('');
-  const [todos, setTodos] = useState([])
+  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState(0)
+  const [entries, setEntries] = useState([{
+    description: "eat noods",
+    amount: 10
+  }])
 
-  const addTodo = () => {
-    setTodos([input, ...todos])
-    setInput('')
+  const addEntries = () => {
+    setEntries([...entries, {
+      description: description,
+      amount: amount
+    }]);
+
+    setDescription('');
+    setAmount('')
   }
 
   return (
@@ -19,22 +28,34 @@ const App = () => {
           Todo List</Text>
       </View>
       <ScrollView>
-        {todos.map(todo => (
-        <Todo title={todo} />
+         {entries.map(entries => (
+           <View>
+             <Text>{entries.description}</Text>
+             <Text>{entries.amount}</Text>
+           </View>
         ))}
-      </ScrollView>
+        </ScrollView>
       <TextInput
-        style={styles.todoInput}
-        value = {input}
-        onChangeText = {text => setInput(text) }
+        style = {styles.input}
+        value = {description}
+        placeholder = "Enter description"
+        onChangeText = {text => setDescription(text) }
       />
-      <Button onPress={addTodo} title='Add Todo'/>
+      <TextInput
+        style = {styles.input}
+        value = {amount}
+        placeholder = "Enter Amount"
+        keyboardType = 'numeric'
+        onChangeText = {text => setAmount(text)}
+      />
+      <Button disabled = {!amount || !description} onPress={addEntries} title='Add Entry'/>
     </SafeAreaView>
   )
+
 }
 
 const styles = StyleSheet.create({
-  todoInput: {
+  input: {
     margin: 20,
     height: 40,
     borderColor: 'blue',
@@ -45,7 +66,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     textAlign: 'center'
-  },
+  }
 })
 
 export default App
